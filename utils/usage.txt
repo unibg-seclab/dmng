@@ -1,0 +1,76 @@
+PREAMBLE:
+
+  Each argument except `--setcontext`, `--getcontext`, `--serialize`,
+  `--fixdepth` `--profile` and `--debug` can be abbreviated to its
+  (unique) initial letter.
+
+EXAMPLES:
+
++ Serialize all the policies into a json file
+  dmng --serialize my_policy_file
+
++ Update a json policy (i.e., the `max_depth` attribute) based on the
+  content of the `deny` list
+  dmng --fixdepth my_policy_file
+
++ Set the active policy context for a command
+  dmng -c ls --setcontext s0
+
++ Get the active policy context for a command
+  dmng -c ls --getcontext
+
++ Get all the policy contexts available
+  dmng --getcontext
+
++ Get the security profile of a command
+  dmng -c ls --profile
+
++ Add to the active policy the static requirements of a command
+  dmng -c ls -t
+
++ Add to the active policy the dynamic requirements of a command
+  dmng -c ls -t -s 2.5
+
++ You can also trace a multi-keyword command as the following
+  dmng -c "cat > myFile.jpg /home/../home/test_file.txt" -t -s 2.5
+    |   Explanation: the cmd interface will make an os.Stat to check whether the argument
+    |   provided is a file, then it will convert each file into absolute paths and apply
+    |   path sanitization. For example, the previous command will be converted to:
+     \  dmng -c "cat > $PWD/myFile.jpg /home/test_file.txt" -t -s 2.5
+
++ Inspect the requirements (and the denials) stored by the current policy
+  dmng -c ls -i
+
++ Inspect the requirements matching a permission mask stored by the current policy
+  dmng -c ls -i -p r__
+
++ Add to the current policy a requirement manually
+  dmng -c ls -a /home -p r--
+
++ Remove a requirement from the current policy
+  dmng -c ls -r /home -p r--
+
++ Remove all the requirements matching a pattern from the current policy
+  dmng -c ls -r /% -p --x
+
++ Update a requirement in the current policy
+  dmng -c ls -u /etc/ld.so.cache -p r-x
+  
++ Add to the current policy a denial
+  dmng -c ls -a /opt -d
+
++ Remove a denial from the current policy
+  dmng -c ls -r /opt -d
+
++ Build the security profile of a command based on the active policy
+  dmng -c ls -b
+
++ Build the security profile of a command based on the active policy limiting the number of
+  positive permission to 5 (default 50)
+  dmng -c ls -b -g 5
+
++ Wipe the current policy associated with a command DB
+  dmng -c ls -w
+
++ Wipe the profiles DB
+  dmng -w

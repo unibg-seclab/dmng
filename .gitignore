@@ -1,0 +1,60 @@
+####################################### ENVIRONMENTS ###########################################
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+########################################### EMACS ##############################################
+
+# -*- mode: gitignore; -*-
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Org-mode
+.org-id-locations
+*_archive
+
+# flymake-mode
+*_flymake.*
+
+# reftex files
+*.rel
+
+# AUCTeX auto folder
+/auto/
+
+# cask packages
+.cask/
+dist/
+
+# Flycheck
+flycheck_*.el
+
+# projectiles files
+.projectile
+
+# directory configuration
+.dir-locals.el
+
+########################################### DIRENV #############################################
+
+# direnv directory
+.direnv/
+
+########################################## PROFILES ###########################################
+.profiles
+
+############################################ LOGS #############################################
+.logs
+
+############################################ MISC #############################################
+dmng

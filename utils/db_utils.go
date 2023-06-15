@@ -604,44 +604,43 @@ func WipeDenials(pol int) {
 // traced. Each `requirements` entry is a struct containing the path
 // of the requirement and the associated Permission. Avoids the
 // insertion of duplicates
-func AddStraceRequirements(pol int, requirements []PolicyRow,
-	origin string) {
+func AddDynamicRequirements(pol int, requirements []PolicyRow, origin string) {
+	if len(requirements) == 0 {
+		fmt.Println("[*] No requirements added")
+		return
+	}
 
-	// get a reference to the DB
+	// Get database reference
 	profiles_db, err := sql.Open("sqlite3", DB_NAME)
-	defer profiles_db.Close()
 	if err != nil {
 		panic("Couldn't open `" + DB_NAME + "`")
 	}
+	defer profiles_db.Close()
 
-	// prepare bulk query string
-	var bld strings.Builder
-	counter := 0
-	fmt.Fprintf(&bld, "%s", "INSERT INTO RULE(pol, req, perm, origin) VALUES ")
+	// Build prepared statement
+	var qb strings.Builder
+	qb.WriteString("INSERT INTO RULE(pol, req, perm, origin) VALUES ")
+	values := []interface{}{}
 	for _, req := range requirements {
-		fmt.Fprintf(&bld, "(%d, '%s', %d, '%s'),", pol, req.Req, req.Perm.ToUnixInt(), origin)
-		counter += 1
+		qb.WriteString("(?, ?, ?, ?),")
+		values = append(values, pol, req.Req, req.Perm.ToUnixInt(), origin)
 	}
-	bulk_ins_query := bld.String()[:bld.Len()-1]
-
-	// prepare the insert statement
-	insert_stmt, err := profiles_db.Prepare(bulk_ins_query)
+	query := qb.String()[:qb.Len()-1] // ignore exceeding comma
+	insert_statement, err := profiles_db.Prepare(query)
 	if err != nil {
-		panic("[Error] while preparing the insert statement")
+		panic(fmt.Sprintln("[Error] Preparing insert statement:", err))
 	}
 
-	_, err = insert_stmt.Exec()
+	// Execute prepared statement with the specified list of values
+	_, err = insert_statement.Exec(values...)
 	if err != nil {
 		panic("[Error] during requirement insertion")
 	}
 
-	fmt.Printf("[*] Perfomed %d insertions to the profiles-DB", counter)
-	fmt.Println()
+	fmt.Println("[*]", len(requirements), "requirements added")
 
-	// remove duplicates from DB
+	// Remove duplicates
 	ruleTablePostProcessing(profiles_db, pol)
-
-	fmt.Println("[*] List of requirements provided by strace added")
 }
 
 // Prints to stdout all the requirements of an active policy

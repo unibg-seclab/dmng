@@ -26,17 +26,17 @@ EXAMPLES:
   dmng -c ls --profile
 
 + Add to the active policy the static requirements of a command
-  dmng -c ls -t
+  dmng -c ls -t static
 
 + Add to the active policy the dynamic requirements of a command
-  dmng -c ls -t -s 2.5
+  dmng -c ls -t ptrace -s 2.5
 
 + You can also trace a multi-keyword command as the following
-  dmng -c "cat > myFile.jpg /home/../home/test_file.txt" -t -s 2.5
+  dmng -c "cat > myFile.jpg /home/../home/test_file.txt" -t ptrace -s 2.5
     |   Explanation: the cmd interface will make an os.Stat to check whether the argument
     |   provided is a file, then it will convert each file into absolute paths and apply
     |   path sanitization. For example, the previous command will be converted to:
-     \  dmng -c "cat > $PWD/myFile.jpg /home/test_file.txt" -t -s 2.5
+     \  dmng -c "cat > $PWD/myFile.jpg /home/test_file.txt" -t ptrace -s 2.5
 
 + Inspect the requirements (and the denials) stored by the current policy
   dmng -c ls -i

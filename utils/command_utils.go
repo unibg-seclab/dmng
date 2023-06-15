@@ -22,6 +22,7 @@ package utils
 import (
 	"bufio"
 	"bytes"
+	"encoding/csv"
 	"errors"
 	"fmt"
 	"os"
@@ -409,7 +410,7 @@ func extractRequirements(pol int, cmd string, in *bytes.Buffer) *bytes.Buffer {
 	fmt.Println()
 
 	// add requirements to the profiles DB
-	AddStraceRequirements(pol, requirements, STRACE_FILE)
+	AddDynamicRequirements(pol, requirements, STRACE_FILE)
 
 	return &out
 }
@@ -492,4 +493,43 @@ func removeLogFolder() {
 		panic("Unable to removee the `" + LOG_DIRECTORY +
 			"` directory, check your permissions")
 	}
+}
+
+// Trace `cmd` with eBPF utility to discover the list of accessed paths and their
+// permissions. Stores the list of paths found in the profiles DB.
+func Ebpf(pol int, cmd string) {
+	// Build string command
+	tracing_string_cmd := []string{"permissionsnoop", "-a", "--"}
+	cmds := strings.Split(cmd, " ")
+	tracing_string_cmd = append(tracing_string_cmd, cmds...)
+
+	// Configure execution of the tracing command
+	tracing_cmd := exec.Command(tracing_string_cmd[0], tracing_string_cmd[1:]...)
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	tracing_cmd.Stdout = &stdout
+	tracing_cmd.Stderr = &stderr
+
+	err := tracing_cmd.Run()
+	if err != nil {
+		panic(fmt.Sprintf("[Error] Tracing failed with %v\n"+"%s\n", err, &stderr))
+	}
+
+	// Extract requirements from stdout
+	csv_reader := csv.NewReader(&stdout)
+	records, err := csv_reader.ReadAll()
+	if err != nil {
+		panic(fmt.Sprintln("[Error] Parsing tracing output ", err))
+	}
+
+	paths := make([]PolicyRow, len(records)-1)
+	for i := 0; i < len(records)-1; i++ {
+		record := records[i+1] // +1 to skip header line
+		paths[i] = PolicyRow{
+			Req:  record[0],
+			Perm: *InitPermission(record[1]),
+		}
+	}
+
+	AddDynamicRequirements(pol, paths, STRACE_FILE)
 }

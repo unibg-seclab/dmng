@@ -157,11 +157,14 @@ func main() {
 			Required: false,
 			Help:     "Print to console the entries stored by the current policy",
 		})
-	trace := parser.Flag("t", "trace",
+	trace := parser.Selector(
+		"t", "trace", []string{"static", "ptrace", "ebpf"},
 		&argparse.Options{
 			Required: false,
-			Help:     "Trace a program and automatically add requirements to the active policy",
-		})
+			Help: "Trace program and automatically add its requirements to the active policy. " +
+				"Three modes are supported: 'static', 'ptrace' and 'ebpf'",
+		},
+	)
 	simulate := parser.Float("s", "simulate",
 		&argparse.Options{
 			Required: false,
@@ -260,15 +263,21 @@ func main() {
 
 			retrieveActivePolicy()
 
-			if *trace {
-
-				if *simulate != 0.0 {
-					traceDynamic(*simulate)
-				} else {
+			if trace != nil {
+				switch *trace {
+				case "static":
 					traceStatic()
+				case "ptrace":
+					if *simulate <= 0 {
+						panic("[Error] Dynamic tracing requires to specify the tracing " +
+							"timeframe with the '--simulate' argument")
+					}
+
+					tracePtrace(*simulate)
+				case "ebpf":
+					traceEbpf()
 				}
 				success()
-
 			} else if *wipe {
 
 				isDeny := *deny
@@ -463,13 +472,22 @@ func retrieveActivePolicy() {
 	POL = dmng.GetActivePolicyContext(CMD, CTX)
 }
 
-func traceDynamic(simulationTime float64) {
+func tracePtrace(simulationTime float64) {
 
 	// add to the profiles-DB the chain-of-links to the executable
 	dmng.GetType(POL, CMD, false)
 
-	fmt.Printf("[*] Tracing command with `strace`:\t%s\n", CMD)
+	fmt.Printf("[*] Tracing command with `ptrace`:\t%s\n", CMD)
 	dmng.Strace(POL, EXTD_CMD, simulationTime)
+}
+
+func traceEbpf() {
+
+	// add to the profiles-DB the chain-of-links to the executable
+	dmng.GetType(POL, CMD, false)
+
+	fmt.Printf("[*] Tracing command with `ebpf`:\t%s\n", CMD)
+	dmng.Ebpf(POL, EXTD_CMD)
 }
 
 // Retrieves all the requirements found for the given `command` and

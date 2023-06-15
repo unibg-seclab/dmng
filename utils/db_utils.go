@@ -117,7 +117,7 @@ func CreateDB() {
 func checkDBExists() bool {
 	// check if the .profiles directory already exists
 	if _, err := os.Stat(DB_DIRECTORY); errors.Is(err, os.ErrNotExist) {
-		err := os.Mkdir(DB_DIRECTORY, os.ModePerm)
+		err := os.MkdirAll(DB_DIRECTORY, os.ModePerm)
 		if err != nil {
 			panic("Unable to create the `" + DB_DIRECTORY +
 				"` directory, check your permissions")

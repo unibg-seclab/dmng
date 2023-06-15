@@ -620,7 +620,7 @@ func BuildSecurityProfile(goal int) SecurityProfile {
 func createProfilesFolder(fname string) {
 	// check if the dmng_profiles directory already exists
 	if _, err := os.Stat(PROFILES_FOLDER); errors.Is(err, os.ErrNotExist) {
-		err := os.Mkdir(PROFILES_FOLDER, 0750)
+		err := os.MkdirAll(PROFILES_FOLDER, 0750)
 		if err != nil {
 			panic("Unable to create the `" + PROFILES_FOLDER +
 				"` directory, check your permissions")

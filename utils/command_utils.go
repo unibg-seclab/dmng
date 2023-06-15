@@ -476,7 +476,7 @@ func stripQuotes(quotedPath string) string {
 func createLogFolder() {
 	// create log folder if it doesn't exists
 	if _, err := os.Stat(LOG_DIRECTORY); errors.Is(err, os.ErrNotExist) {
-		err := os.Mkdir(LOG_DIRECTORY, os.ModePerm)
+		err := os.MkdirAll(LOG_DIRECTORY, os.ModePerm)
 		if err != nil {
 			panic("Unable to create the `" + LOG_DIRECTORY +
 				"` directory, check your permissions")

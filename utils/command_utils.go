@@ -211,8 +211,15 @@ func ELFHandler(pol int, cmd string, elf_path string) {
 	}
 	// add the libs to the profiles-DB
 	if len(transient_libs) != 0 {
-		perm := 5 // read-only permission
-		AddRequirements(pol, &transient_libs, perm, SHARED_LIBS)
+		paths := make([]PolicyRow, len(transient_libs)-1)
+		for i, path := range transient_libs {
+			paths[i] = PolicyRow{
+				Req:    path,
+				Perm:   *InitPermission("r-x"),
+				Origin: SHARED_LIBS,
+			}
+		}
+		AddRequirements(pol, paths)
 	}
 }
 
@@ -395,6 +402,7 @@ func extractRequirements(pol int, cmd string, in *bytes.Buffer) *bytes.Buffer {
 					out.Write(l)
 					out.Write([]byte("\n"))
 				}
+				pms.Origin = STRACE_FILE
 				requirements = append(requirements, pms)
 				counter += 1
 				if counter%10 == 0 {
@@ -410,7 +418,7 @@ func extractRequirements(pol int, cmd string, in *bytes.Buffer) *bytes.Buffer {
 	fmt.Println()
 
 	// add requirements to the profiles DB
-	AddDynamicRequirements(pol, requirements, STRACE_FILE)
+	AddRequirements(pol, requirements)
 
 	return &out
 }
@@ -526,10 +534,11 @@ func Ebpf(pol int, cmd string) {
 	for i := 0; i < len(records)-1; i++ {
 		record := records[i+1] // +1 to skip header line
 		paths[i] = PolicyRow{
-			Req:  record[0],
-			Perm: *InitPermission(record[1]),
+			Req:    record[0],
+			Perm:   *InitPermission(record[1]),
+			Origin: STRACE_FILE,
 		}
 	}
 
-	AddDynamicRequirements(pol, paths, STRACE_FILE)
+	AddRequirements(pol, paths)
 }

@@ -418,44 +418,6 @@ func GetAllAvailablePolicies() []PolicyIdentifier {
 	return identifiers
 }
 
-// Adds a list of `reqs` of a `pol` to the profiles-DB
-func AddRequirements(pol int, reqs *[]string, perm int,
-	origin string) {
-
-	// get a reference to the DB
-	profiles_db, err := sql.Open("sqlite3", DB_NAME)
-	defer profiles_db.Close()
-	if err != nil {
-		panic("Couldn't open `" + DB_NAME + "`")
-	}
-
-	// prepare bulk query string
-	var bld strings.Builder
-	counter := 0
-	fmt.Fprintf(&bld, "%s", "INSERT INTO RULE(pol, req, perm, origin) VALUES ")
-	for _, path := range *reqs {
-		fmt.Fprintf(&bld, "(%d, '%s', %d, '%s'),", pol, path, perm, origin)
-		counter += 1
-	}
-	bulk_ins_query := bld.String()[:bld.Len()-1]
-
-	// prepare the insert statement
-	insert_stmt, err := profiles_db.Prepare(bulk_ins_query)
-	if err != nil {
-		panic("[Error] while preparing the insert statement")
-	}
-
-	_, err = insert_stmt.Exec()
-	if err != nil {
-		panic("[Error] during requirement insertion")
-	}
-
-	// insertion post process
-	ruleTablePostProcessing(profiles_db, pol)
-
-	fmt.Printf("[*] List of requirements of policy %d added\n", pol)
-}
-
 // Removes the duplicates keeping only the highest permission for each
 // (pol, req) entry
 func ruleTablePostProcessing(db *sql.DB, pol int) {
@@ -599,12 +561,12 @@ func WipeDenials(pol int) {
 	fmt.Printf("[*] Denials associated with policy %d wiped\n", +pol)
 }
 
-// Adds a list of `requirements` of a `command` to the
-// profiles-DB. This is function is used after `command` has been
-// traced. Each `requirements` entry is a struct containing the path
-// of the requirement and the associated Permission. Avoids the
-// insertion of duplicates
-func AddDynamicRequirements(pol int, requirements []PolicyRow, origin string) {
+// Add a list of `requirements` of a `command` to the profiles
+// database. Each `requirements` entry is a struct containing the path
+// of the requirement, the associated Permission, and the origin
+// information.
+// It avoids the insertion of duplicates, by removing them
+func AddRequirements(pol int, requirements []PolicyRow) {
 	if len(requirements) == 0 {
 		fmt.Println("[*] No requirements added")
 		return
@@ -623,7 +585,7 @@ func AddDynamicRequirements(pol int, requirements []PolicyRow, origin string) {
 	values := []interface{}{}
 	for _, req := range requirements {
 		qb.WriteString("(?, ?, ?, ?),")
-		values = append(values, pol, req.Req, req.Perm.ToUnixInt(), origin)
+		values = append(values, pol, req.Req, req.Perm.ToUnixInt(), req.Origin)
 	}
 	query := qb.String()[:qb.Len()-1] // ignore exceeding comma
 	insert_statement, err := profiles_db.Prepare(query)

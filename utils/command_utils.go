@@ -534,7 +534,7 @@ func Ebpf(pol int, cmd string) {
 	for i := 0; i < len(records)-1; i++ {
 		record := records[i+1] // +1 to skip header line
 		paths[i] = PolicyRow{
-			Req:    record[0],
+			Req:    record[0][:len(record[0])-1], // ignore NULL character
 			Perm:   *InitPermission(record[1]),
 			Origin: STRACE_FILE,
 		}

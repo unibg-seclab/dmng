@@ -211,7 +211,7 @@ func ELFHandler(pol int, cmd string, elf_path string) {
 	}
 	// add the libs to the profiles-DB
 	if len(transient_libs) != 0 {
-		paths := make([]PolicyRow, len(transient_libs)-1)
+		paths := make([]PolicyRow, len(transient_libs))
 		for i, path := range transient_libs {
 			paths[i] = PolicyRow{
 				Req:    path,

@@ -264,7 +264,7 @@ func main() {
 
 			retrieveActivePolicy()
 
-			if trace != nil {
+			if *trace != "" {
 				switch *trace {
 				case "static":
 					traceStatic()

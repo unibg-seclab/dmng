@@ -505,11 +505,11 @@ func removeLogFolder() {
 
 // Trace `cmd` with eBPF utility to discover the list of accessed paths and their
 // permissions. Stores the list of paths found in the profiles DB.
-func Ebpf(pol int, cmd string) {
-	// Build string command
-	tracing_string_cmd := []string{"permissionsnoop", "-a", "--"}
-	cmds := strings.Split(cmd, " ")
-	tracing_string_cmd = append(tracing_string_cmd, cmds...)
+func Ebpf(pol int, component string) {
+	// Build tracer command
+	tracing_string_cmd := []string{"/usr/local/bin/permissionsnoop", "-a", "--"}
+	comps := strings.Split(component, " ")
+	tracing_string_cmd = append(tracing_string_cmd, comps...)
 
 	// Configure execution of the tracing command
 	tracing_cmd := exec.Command(tracing_string_cmd[0], tracing_string_cmd[1:]...)
@@ -517,6 +517,7 @@ func Ebpf(pol int, cmd string) {
 	var stderr bytes.Buffer
 	tracing_cmd.Stdout = &stdout
 	tracing_cmd.Stderr = &stderr
+	tracing_cmd.Stdin = os.Stdin
 
 	err := tracing_cmd.Run()
 	if err != nil {
@@ -529,14 +530,16 @@ func Ebpf(pol int, cmd string) {
 	if err != nil {
 		panic(fmt.Sprintln("[Error] Parsing tracing output ", err))
 	}
-
-	paths := make([]PolicyRow, len(records)-1)
-	for i := 0; i < len(records)-1; i++ {
-		record := records[i+1] // +1 to skip header line
-		paths[i] = PolicyRow{
-			Req:    record[0][:len(record[0])-1], // ignore NULL character
-			Perm:   *InitPermission(record[1]),
-			Origin: STRACE_FILE,
+	var paths []PolicyRow
+	for _, rec := range records[1:] { // skip header line
+		if len(rec[0]) > 0 { // ignore empty paths
+			paths = append(paths,
+				PolicyRow{
+					Req:    rec[0],
+					Perm:   *InitPermission(rec[1]),
+					Origin: STRACE_FILE,
+				},
+			)
 		}
 	}
 

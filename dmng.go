@@ -27,6 +27,7 @@ import (
 	"os"
 	"os/user"
 	"path"
+	"strconv"
 	"strings"
 
 	dmng "dmng/utils"
@@ -483,10 +484,12 @@ func tracePtrace(simulationTime float64) {
 
 func traceEbpf() {
 
-	// add to the profiles-DB the chain-of-links to the executable
-	dmng.GetType(POL, CMD, false)
-
 	fmt.Printf("[*] Tracing command with `ebpf`:\t%s\n", CMD)
+	// when user enters a command
+	if _, err := strconv.Atoi(CMD); err != nil {
+		// add to the profiles-DB the chain-of-links to the executable
+		dmng.GetType(POL, CMD, false)
+	}
 	dmng.Ebpf(POL, EXTD_CMD)
 }
 

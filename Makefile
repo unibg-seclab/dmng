@@ -9,11 +9,11 @@ BINARY         := dmng
 LICENSE_TYPE   := "mit"
 LICENSE_HOLDER := "Unibg Seclab (https://seclab.unibg.it)"
 
+all: install
+
 addlicense:
 	go get -u github.com/google/addlicense
 	$(shell go env GOPATH)/bin/addlicense -c $(LICENSE_HOLDER) -l $(LICENSE_TYPE) .
-
-all: install
 
 # install dependencies
 install_binaries:

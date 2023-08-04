@@ -1,0 +1,51 @@
+{
+   "policies": [
+      {
+         "policy_name": "exiftool",
+         "read": [
+            "/usr/local/share/perl/5.32.1/Image/ExifTool.pm",
+            "/usr/local/share/perl/5.32.1/Image/ExifTool/MakerNotes.pm",
+            "/usr/local/share/perl/5.32.1/Image/ExifTool/XMP.pm",
+            "/usr/local/share/perl/5.32.1/Image/ExifTool/GPS.pm",
+            "/usr/local/share/perl/5.32.1/Image/ExifTool/Exif.pm",
+            "/usr/local/share/perl/5.32.1/File/RandomAccess.pm",
+            "/usr/local/bin/exiftool",
+            "/usr/bin/perl",
+            "/usr/lib",
+            "/usr/local/share",
+            "/usr/lib/locale/locale-archive",
+            "/usr/lib/x86_64-linux-gnu/perl-base/warnings/register.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/overload.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/auto/File/Glob/Glob.so",
+            "/usr/lib/x86_64-linux-gnu/perl-base/auto/List/Util/Util.so",
+            "/usr/lib/x86_64-linux-gnu/perl-base/Scalar/Util.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/List/Util.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/XSLoader.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/strict.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/vars.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/warnings.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/Exporter.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/overloading.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/Exporter/Heavy.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/File/Basename.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/File/Glob.pm",
+            "/etc/ld.so.cache",
+            "/etc/localtime",
+            "/lib/x86_64-linux-gnu/libm.so.6",
+            "/lib/x86_64-linux-gnu/libpthread.so.0",
+            "/lib/x86_64-linux-gnu/libc.so.6",
+            "/lib/x86_64-linux-gnu/libcrypt.so.1",
+            "/lib/x86_64-linux-gnu/libdl.so.2",
+            "/dev/urandom",
+            "./"
+         ],
+         "write": [],
+         "exec": [
+            "/usr/bin/perl",
+            "/usr/lib",
+            "/usr/local/bin/exiftool"
+         ]
+      }
+   ]
+}
+

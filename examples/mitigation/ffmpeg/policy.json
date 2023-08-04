@@ -1,0 +1,23 @@
+{
+   "read": [
+      "/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib",
+      "/usr/bin",
+      "/tmp",
+      "./GOD.txt",
+      "./file_read.avi"
+   ],
+   "write": [
+      "/tmp",
+      "/dev",
+      "./output"
+   ],
+   "exec": [
+      "./FFmpeg",
+      "/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib"
+   ],
+   "deny": []
+}

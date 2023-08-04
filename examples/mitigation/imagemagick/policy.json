@@ -1,0 +1,24 @@
+{
+   "read": [
+      "./ImageMagick-7.0.10-36",
+      "/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib",
+      "/usr/bin",
+      "/tmp",
+      "./input_images",
+      "./output_images"
+   ],
+   "write": [
+      "/tmp",
+      "/dev",
+      "./output_images"
+   ],
+   "exec": [
+      "./ImageMagick-7.0.10-36",
+      "/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib"
+   ],
+   "deny": []
+}

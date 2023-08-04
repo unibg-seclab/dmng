@@ -1,0 +1,36 @@
+{
+   "policies": [
+	{
+         "policy_name": "openssl",
+         "read": [
+            "/etc/ld.so.cache",
+            "/lib/x86_64-linux-gnu/libssl.so.3",
+            "/lib/x86_64-linux-gnu/libcrypto.so.3",
+            "/lib/x86_64-linux-gnu/libc.so.6",
+            "/lib/x86_64-linux-gnu/libm.so.6",
+            "/lib/x86_64-linux-gnu/libcrypt.so.1",
+            "/dev/urandom",
+            "/.",
+            "/cert.crt",
+            "/bin/sh",
+            "/bin/openssl",
+            "/usr/lib/locale/locale-archive",
+            "/usr/lib/x86_64-linux-gnu/perl-base/Cwd.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/strict.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/Exporter.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/XSLoader.pm",
+            "/usr/lib/x86_64-linux-gnu/perl-base/auto/Cwd/Cwd.so",
+            "/usr/lib/ssl/openssl.cnf",
+            "/usr/bin/perl",
+            "/usr/local/bin/c_rehash"
+         ],
+         "write": [],
+         "exec": [
+            "/bin/sh",
+            "/bin/openssl",
+            "/usr/bin/perl",
+            "/usr/local/bin/c_rehash"
+         ]
+      }
+   ]
+}

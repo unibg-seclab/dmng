@@ -1,0 +1,30 @@
+{
+   "read": [
+      "/lib64/ld-linux-x86-64.so.2",
+      "/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib64/ld-linux-x86-64.so.2",
+      "/etc/ld.so.cache",
+      "/etc/ImageMagick-7/policy.xml",
+      "/etc/ImageMagick-7/log.xml",
+      "/etc/localtime",
+      "/sys/devices/system/cpu/possible",
+      "/usr/bin/magick",
+      "/usr/lib",
+      "/usr/lib/ImageMagick-7.1.1/modules-Q16HDRI/coders",
+      "/usr/lib/locale/locale-archive",
+      "/usr/share/locale/locale.alias",
+      "."
+   ],
+   "write": [
+      "/dev",
+      "./output.cache",
+      "./output.mpc"
+   ],
+   "exec": [
+      "/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib64/ld-linux-x86-64.so.2",
+      "/usr/bin/magick",
+      "/usr/lib"
+   ],
+   "deny": []
+}

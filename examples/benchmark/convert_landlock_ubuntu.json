@@ -1,0 +1,36 @@
+{
+   "read": [
+      "/sys/devices/system/cpu",
+      "./output.cache",
+      "./input.mpc",
+      "./output.mpc",
+      "/dev/urandom",
+      "/tmp",
+      "/usr/bin",
+      "/usr/lib/locale/locale-archive",
+      "/usr/lib/x86_64-linux-gnu/ImageMagick-6.9.11/modules-Q16/coders",
+      "/usr/share/locale/locale.alias",
+      "/etc/alternatives/convert",
+      "/etc/ld.so.cache",
+      "/etc/ImageMagick-6/policy.xml",
+      "/etc/ImageMagick-6/log.xml",
+      "/etc/ImageMagick-6/coder.xml",
+      "/etc/ImageMagick-6/magic.xml",
+      "/etc/localtime",
+      "/lib/x86_64-linux-gnu",
+      "/lib64/ld-linux-x86-64.so.2"
+   ],
+   "write": [
+      "/dev",
+      "./output.cache",
+      "./output.mpc",
+      "/tmp"
+   ],
+   "exec": [
+      "/usr/bin",
+      "/etc/alternatives/convert",
+      "/lib/x86_64-linux-gnu",
+      "/lib64/ld-linux-x86-64.so.2"
+   ],
+   "deny": []
+}

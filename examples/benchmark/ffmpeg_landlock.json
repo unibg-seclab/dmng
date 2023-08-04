@@ -1,0 +1,25 @@
+{
+   "read": [
+      ".",
+      "/etc/ld.so.cache",
+      "/etc/localtime",
+      "/sys/devices/system/cpu/possible",
+      "/usr/bin/ffmpeg",
+      "/usr/lib",
+      "/usr/lib/pulseaudio/libpulsecommon-16.1.so",
+      "/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib64/ld-linux-x86-64.so.2"
+   ],
+   "write": [
+      "/dev",
+      "."
+   ],
+   "exec": [
+      "/usr/bin/ffmpeg",
+      "/usr/lib",
+      "/usr/lib/pulseaudio/libpulsecommon-16.1.so",
+      "/lib64/ld-linux-x86-64.so.2",
+      "/usr/lib64/ld-linux-x86-64.so.2"
+   ],
+   "deny": []
+}

@@ -1,0 +1,15 @@
+[package]
+name = "dmng-test"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = [
+  "landlock_service"
+]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.72"
+clap = { version = "3.1.15", features = ["derive"] }

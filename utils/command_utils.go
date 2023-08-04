@@ -77,7 +77,7 @@ func GetType(pol int, program string, verbose bool) (string, CommandType) {
 	which.Stderr = &stderr
 	err := which.Run()
 	if err != nil {
-		fmt.Println("Command not found")
+		fmt.Println("Component not found")
 		panic(err)
 	}
 
@@ -95,7 +95,7 @@ func GetType(pol int, program string, verbose bool) (string, CommandType) {
 
 		if err != nil {
 			fmt.Println("Something went wrong while retrieving the ELF " +
-				"with the command path")
+				"with the component path")
 			panic(err)
 		}
 
@@ -275,7 +275,7 @@ func Strace(pol int, cmd string, simulationTime float64) {
 				fmt.Printf("stderr:\n%v\n", stderr.String())
 			}
 			fmt.Printf("\n`err`:%v\n", err)
-			panic("[Error] Something went wrong during the timed-strace command")
+			panic("[Error] Something went wrong during the timed-tracing command")
 		}
 	}
 
@@ -369,7 +369,7 @@ func extractRequirements(pol int, cmd string, in *bytes.Buffer) *bytes.Buffer {
 					pms.Req = requirement
 					pms.Perm = *perm
 				} else if DEBUG_COMMAND {
-					fmt.Printf("OPEN SYSCALL: strace line unrecognized:  %s\n", l)
+					fmt.Printf("OPEN SYSCALL: trace line unrecognized:  %s\n", l)
 				}
 
 			case 3: // creat()

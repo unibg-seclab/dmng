@@ -82,7 +82,7 @@ func main() {
 	*/
 
 	parser := argparse.NewParser("dmng", "A command line tool to manage the "+
-		"requirements associated with a binary (or script)")
+		"requirements associated with a component, binary or script.")
 
 	// 1. extended arguments
 
@@ -104,7 +104,7 @@ func main() {
 	setctx := parser.String("", "setcontext",
 		&argparse.Options{
 			Required: false,
-			Help: "Set the active policy context of a command. A policy context is active" +
+			Help: "Set the active policy context of a component. A policy context is active" +
 				" until it's replaced by another one.",
 		})
 	getctx := parser.Flag("", "getcontext",
@@ -115,15 +115,15 @@ func main() {
 	profile := parser.Flag("", "profile",
 		&argparse.Options{
 			Required: false,
-			Help:     "Print to console the profile of a command",
+			Help:     "Print to console the profile of a component",
 		})
 
 	// 2. abbreviated arguments
 
-	command := parser.String("c", "command",
+	command := parser.String("c", "component",
 		&argparse.Options{
 			Required: false,
-			Help:     "Set the command name",
+			Help:     "Set the component name",
 		})
 	add := parser.String("a", "add",
 		&argparse.Options{
@@ -246,7 +246,7 @@ func main() {
 				EXTD_CMD = strings.Join(cmdKeywords, " ")
 			}
 
-			fmt.Printf("[*] Command to trace: `%s`\n", EXTD_CMD)
+			fmt.Printf("[*] Component to trace: `%s`\n", EXTD_CMD)
 
 			if *setctx != "" {
 				CTX = *setctx
@@ -358,13 +358,13 @@ func failure() {
 
 func getContext() {
 	c := dmng.GetActiveContext(CMD)
-	fmt.Printf("[*] CMD: %s, CTX: %s\n", CMD, c)
+	fmt.Printf("[*] COMP: %s, CTX: %s\n", CMD, c)
 }
 
 func getAvailableContexts() {
 	data := *dmng.GetAvailableContexts()
 	for k, v := range data {
-		fmt.Printf("[*] CMD %s: , available CTX: |", k)
+		fmt.Printf("[*] COMP %s: , available CTX: |", k)
 		for _, e := range v {
 			fmt.Printf(" %s |", e)
 		}
@@ -407,7 +407,7 @@ func updateContext() {
 	// get the active policy context
 	POL = dmng.GetActivePolicyContext(CMD, CTX)
 
-	fmt.Printf("[*] Set CTX: %s, CMD: %s, POL: %d\n", CTX, CMD, POL)
+	fmt.Printf("[*] Set CTX: %s, COMP: %s, POL: %d\n", CTX, CMD, POL)
 }
 
 func retrieveActiveContext() {
@@ -478,13 +478,13 @@ func tracePtrace(simulationTime float64) {
 	// add to the profiles-DB the chain-of-links to the executable
 	dmng.GetType(POL, CMD, false)
 
-	fmt.Printf("[*] Tracing command with `ptrace`:\t%s\n", CMD)
+	fmt.Printf("[*] Tracing component with `ptrace`:\t%s\n", CMD)
 	dmng.Strace(POL, EXTD_CMD, simulationTime)
 }
 
 func traceEbpf() {
 
-	fmt.Printf("[*] Tracing command with `ebpf`:\t%s\n", CMD)
+	fmt.Printf("[*] Tracing component with `ebpf`:\t%s\n", CMD)
 	// when user enters a command
 	if _, err := strconv.Atoi(CMD); err != nil {
 		// add to the profiles-DB the chain-of-links to the executable
@@ -500,11 +500,11 @@ func traceStatic() {
 	// get the path and the type associated with the command
 	command_path, program_type := dmng.GetType(POL, CMD, true)
 
-	help_wrapper := "[*] Command wrapper found, try the `--simulate` option"
+	help_wrapper := "[*] Component wrapper found, try the `--simulate` option"
 	help_tracepath := "[*] No direct path to the ELF program, try the `--simulate` option"
 
 	// print info to console
-	fmt.Printf("[*] Command path:\t%s\n", command_path)
+	fmt.Printf("[*] Component path:\t%s\n", command_path)
 	switch program_type {
 	case dmng.ELFProgram:
 		// get the transient libraries of an ELF file
@@ -548,7 +548,7 @@ func BuildProfiles(goal int, fname string) {
 		CMD = pid.Cmd
 		CTX = pid.Ctx
 		profiles = append(profiles, BuildSecurityProfile(goal))
-		fmt.Printf("[*] Policy for CMD: %s and CTX: %s created successfully\n", CMD, CTX)
+		fmt.Printf("[*] Policy for COMP: %s and CTX: %s created successfully\n", CMD, CTX)
 	}
 
 	// ensure the dmng_profiles folder is available
@@ -661,7 +661,7 @@ func printProfile() {
 
 	rows := dmng.GetSecurityProfile(POL)
 
-	fmt.Printf("[*] Security profile CTX: %s, CMD: %s, POL: %d\n", CTX, CMD, POL)
+	fmt.Printf("[*] Security profile CTX: %s, COMP: %s, POL: %d\n", CTX, CMD, POL)
 
 	for i, r := range rows {
 		fmt.Printf(" %d,\t%s,\t%s\n", i, r.Perm.ToString(), r.Req)
@@ -677,14 +677,14 @@ func inspectCommand() {
 			failure()
 		}
 
-		fmt.Printf("[*] Inspect command %s, mask %s\n", CMD, PERMISSION)
+		fmt.Printf("[*] Inspect component %s, mask %s\n", CMD, PERMISSION)
 		fmt.Printf("\n  Permissions (CTX: %s, POL: %d):\n", CTX, POL)
 
 		dmng.PrintPermissionedRequirements(POL, PERMISSION)
 	} else {
 		mask := "___ => ANY"
 
-		fmt.Printf("[*] Inspect command %s, mask %s\n", CMD, mask)
+		fmt.Printf("[*] Inspect component %s, mask %s\n", CMD, mask)
 		fmt.Printf("\n  Permissions (CTX: %s, POL: %d):\n", CTX, POL)
 
 		// print the requirements
@@ -713,7 +713,7 @@ func addPath(path string, isDeny bool) {
 		}
 
 		dmng.AddDenial(POL, path)
-		fmt.Println("[*] Denial for command " + CMD + " added")
+		fmt.Println("[*] Denial for component " + CMD + " added")
 	} else {
 		if !dmng.IsValidPerm(PERMISSION) {
 			fmt.Println("[Error] Invalid permission found")
@@ -723,7 +723,7 @@ func addPath(path string, isDeny bool) {
 		perm := int(dmng.InitPermission(PERMISSION).ToUnixInt())
 		dmng.AddRequirement(POL, path, perm, dmng.USER_INPUT)
 
-		fmt.Println("[*] Requirement of command " + CMD + " added")
+		fmt.Println("[*] Requirement of component " + CMD + " added")
 	}
 
 }
@@ -740,7 +740,7 @@ func removePath(path string, isDeny bool) {
 
 		dmng.RemoveDenial(POL, path)
 
-		fmt.Println("[*] Denial for command " + CMD + " removed")
+		fmt.Println("[*] Denial for component " + CMD + " removed")
 	} else {
 		if PERMISSION == "" {
 			fmt.Println("[Error] `--remove` without permission regex is unsupported, use `--wipe` instead")

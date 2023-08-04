@@ -770,7 +770,7 @@ func RemoveRequirements(command string,
 			panic("[Error] during requirement deletion")
 		}
 	}
-	fmt.Println("[*] List of requirements of command `" + command +
+	fmt.Println("[*] List of requirements of component `" + command +
 		"` removed")
 }
 

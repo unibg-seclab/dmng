@@ -13,22 +13,22 @@ EXAMPLES:
   content of the `deny` list
   dmng --fixdepth my_policy_file
 
-+ Set the active policy context for a command
++ Set the active policy context for a component
   dmng -c ls --setcontext s0
 
-+ Get the active policy context for a command
++ Get the active policy context for a component
   dmng -c ls --getcontext
 
 + Get all the policy contexts available
   dmng --getcontext
 
-+ Get the security profile of a command
++ Get the security profile of a component
   dmng -c ls --profile
 
-+ Add to the active policy the static requirements of a command
++ Add to the active policy the static requirements of a component
   dmng -c ls -t static
 
-+ Add to the active policy the dynamic requirements of a command
++ Add to the active policy the dynamic requirements of a component
   dmng -c ls -t ptrace -s 2.5
 
 + You can also trace a multi-keyword command as the following
@@ -62,14 +62,14 @@ EXAMPLES:
 + Remove a denial from the current policy
   dmng -c ls -r /opt -d
 
-+ Build the security profile of a command based on the active policy
++ Build the security profile of a component based on the active policy
   dmng -c ls -b
 
-+ Build the security profile of a command based on the active policy limiting the number of
++ Build the security profile of a component based on the active policy limiting the number of
   positive permission to 5 (default 50)
   dmng -c ls -b -g 5
 
-+ Wipe the current policy associated with a command DB
++ Wipe the current policy associated with a component from the DB
   dmng -c ls -w
 
 + Wipe the profiles DB

@@ -12,4 +12,4 @@ members = [
 
 [dependencies]
 anyhow = "1.0.72"
-clap = { version = "3.1.15", features = ["derive"] }
+clap = { version = "4.4.7", features = ["derive"] }

@@ -195,4 +195,5 @@ ebpf-ffmpeg-c:
 	@ rm tmp
 
 clean:
-	@ rm $(INPUT) $(IMG)-1.zip $(IMG)-1.zip.1 *.cache
+	@ cargo clean
+	@ rm -f $(INPUT) *.cache
